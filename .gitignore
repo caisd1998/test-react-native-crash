@@ -1,2 +1,4 @@
 ios/Pods
 node_modules
+ios/build
+ios/MyApp.xcworkspace/xcuserdata
