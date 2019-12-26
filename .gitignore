@@ -5,3 +5,5 @@ ios/MyApp.xcworkspace/xcuserdata
 ios/MyApp.xcodeproj/xcuserdata
 ios-release.bundle
 ios-release.bundle.map
+ios-debug.bundle
+ios-debug.bundle.map
