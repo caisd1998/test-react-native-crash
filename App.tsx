@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
-import Crashes from 'appcenter-crashes';
 
 export default class MyApp extends Component {
   render() {
@@ -14,7 +13,7 @@ export default class MyApp extends Component {
         />
         <Button
           onPress={()=> {
-            Crashes.generateTestCrash();
+            console.log("TODO");
           }}
           title="NATIVE CRASH"
         />
