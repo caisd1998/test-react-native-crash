@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
+import { Client } from 'bugsnag-react-native';
+const bugsnag = new Client("b0166c69090102f6b952a327feaff3de");
 
 export default class MyApp extends Component {
   render() {
@@ -13,9 +15,9 @@ export default class MyApp extends Component {
         />
         <Button
           onPress={()=> {
-            console.log("TODO");
+            bugsnag.notify(new Error("Test error"));
           }}
-          title="NATIVE CRASH"
+          title="Notify bugsnag"
         />
       </View>
     );

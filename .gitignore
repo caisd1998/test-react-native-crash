@@ -3,3 +3,5 @@ node_modules
 ios/build
 ios/MyApp.xcworkspace/xcuserdata
 ios/MyApp.xcodeproj/xcuserdata
+ios-release.bundle
+ios-release.bundle.map
