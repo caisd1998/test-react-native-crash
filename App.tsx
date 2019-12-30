@@ -8,6 +8,7 @@ export default class MyApp extends Component {
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Button
           onPress={()=> {
+            console.log("Add some lines");
             throw new Error('This is a test javascript crash!');
           }}
           title="JS CRASH"
