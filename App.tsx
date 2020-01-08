@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
 import { Client } from 'bugsnag-react-native';
+
+import {NativeModules} from "react-native";
+
+const NativeCrash = NativeModules.NativeCrash;
 const bugsnag = new Client("6053f051594a528183b9619ed88779d5");
 
 export default class MyApp extends Component {
@@ -19,7 +23,13 @@ export default class MyApp extends Component {
           }}
           title="Notify bugsnag"
         />
-      </View>
+        <Button
+          onPress={()=> {
+            NativeCrash.tryCrash();
+          }}
+          title="NATIVE CRASH"
+        />
+      </View> 
     );
   }
 }
