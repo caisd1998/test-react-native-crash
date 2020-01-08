@@ -14,14 +14,20 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
 
         if [ -n "$APPCENTER_XCODE_PROJECT" ]; then
             echo "This is iOS project"
+
+            # Here we don't support finding marketing version older than xcode 11.
+            # If there's no marketing version, simply use xcode 11 to update target to automatically have it.
+            cd ios
+            MARKETING_VERSION = `xcodebuild -scheme $APPCENTER_XCODE_SCHEME -showBuildSettings | grep "MARKETING_VERSION" | sed 's/[ ]*MARKETING_VERSION = //'`
+            echo "Found marketing version $MARKETING_VERSION"
+            cd ..
             
             echo "Generating Source Map"
-            #yarn run
             react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios-release.bundle --sourcemap-output ios-release.bundle.map
             echo "Uploading Source Map"
             curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
                 -F apiKey=$BUGSNAG_API_KEY \
-                -F appVersion=1.0 \
+                -F appBundleVersion=$MARKETING_VERSION \
                 -F dev=false \
                 -F platform=ios \
                 -F sourceMap=@ios-release.bundle.map \
