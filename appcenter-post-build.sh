@@ -6,11 +6,12 @@ env
 if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
     echo "Build Succeded"
 
-    if [[ -z "$BUGSNAG_API_KEY" ]]; then
+    # BUGSNAG_API_KEY is set by us
+    if [ -z "$BUGSNAG_API_KEY" ]; then
         echo "No BUGSNAG_API_KEY, so won't upload anything to Bugsnag."
     else
-        cd $APPCENTER_SOURCE_DIRECTORY
         echo "Start uploading to Bugsnag."
+        cd $APPCENTER_SOURCE_DIRECTORY
 
         if [ -n "$APPCENTER_XCODE_PROJECT" ]; then
             echo "This is iOS project"
@@ -18,12 +19,16 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
             # Here we don't support finding marketing version older than xcode 11.
             # If there's no marketing version, simply use xcode 11 to update target to automatically have it.
             cd ios
-            MARKETING_VERSION = `xcodebuild -scheme $APPCENTER_XCODE_SCHEME -showBuildSettings | grep "MARKETING_VERSION" | sed 's/[ ]*MARKETING_VERSION = //'`
-            echo "Found marketing version $MARKETING_VERSION"
+            MARKETING_VERSION = `/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme $APPCENTER_XCODE_SCHEME -showBuildSettings | grep "MARKETING_VERSION" | sed 's/[ ]*MARKETING_VERSION = //'`
+            if [ -z "$MARKETING_VERSION" ]; then
+                echo "Failed to find marketing version, exit"
+                return 1
+            fi
+                echo "Found marketing version $MARKETING_VERSION"
             cd ..
             
             echo "Generating Source Map"
-            react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios-release.bundle --sourcemap-output ios-release.bundle.map
+            yarn run react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios-release.bundle --sourcemap-output ios-release.bundle.map
             echo "Uploading Source Map"
             curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
                 -F apiKey=$BUGSNAG_API_KEY \
@@ -35,7 +40,15 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
                 -F projectRoot=`pwd`
             echo "Done Source Map"
 
-            echo "TODO: upload dSYMs"
+            echo "Uploading dSYMs"
+            # here we hardcode the location based on analysis result on appcenter build
+            # say the output directory is 1/a/build/, and the symbols directory is 1/a/symbols/
+            # we also hardcode the dsym name, so need to change by app name
+            cd $APPCENTER_OUTPUT_DIRECTORY/../symbols/
+            curl --http1.1 https://upload.bugsnag.com/ \
+                -F apiKey=$BUGSNAG_API_KEY \
+                -F dsym=@MyApp.app.dSYM/Contents/Resources/DWARF/MyApp
+            echo "Done dSYMs"
 
         elif [ -n "$APPCENTER_ANDROID_VARIANT" ]; then
             echo "This is Android project"
