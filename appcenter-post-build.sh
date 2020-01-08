@@ -29,7 +29,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
             echo "Uploading Source Map"
             curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
                 -F apiKey=$BUGSNAG_API_KEY \
-                -F appBundleVersion=$MARKETING_VERSION \
+                -F appVersion=$MARKETING_VERSION \
                 -F dev=false \
                 -F platform=ios \
                 -F sourceMap=@ios-release.bundle.map \
