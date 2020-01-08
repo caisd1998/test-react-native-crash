@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
 import { Client } from 'bugsnag-react-native';
-const bugsnag = new Client("b0166c69090102f6b952a327feaff3de");
+const bugsnag = new Client("6053f051594a528183b9619ed88779d5");
 
 export default class MyApp extends Component {
   render() {
