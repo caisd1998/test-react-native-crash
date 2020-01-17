@@ -54,11 +54,11 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
             
             cd $APPCENTER_SOURCE_DIRECTORY/android
             export APP_VERSION=`./gradlew -q printVersionName`
-            if [ -z "$APP_VERSION" ]; then
-                echo "Failed to find app version, exit 1"
-                exit 1
-            fi
+            export VERSION_CODE=`./gradlew -q printVersionCode`
+            export APPLICATION_ID=`./gradlew -q printApplicationId`
             echo "Found app version $APP_VERSION"
+            echo "Found version code $VERSION_CODE"
+            echo "Found application id $APPLICATION_ID"
 
             echo "Generating Source Maps"
             cd $APPCENTER_SOURCE_DIRECTORY

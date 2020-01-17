@@ -207,10 +207,22 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
+// following three print tasks are used in app center build script to upload source map and pro guard file to bugsnag
 task printVersionName {
     doLast {
         println android.defaultConfig.versionName
     }
 }
+task printVersionCode {
+    doLast {
+        println android.defaultConfig.versionCode
+    }
+}
+task printApplicationId {
+    doLast {
+        println android.defaultConfig.applicationId
+    }
+}
+
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
