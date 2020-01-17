@@ -53,9 +53,10 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
             echo "This is Android project"
             
             cd $APPCENTER_SOURCE_DIRECTORY/android
-            export APP_VERSION=`./gradlew -q printVersionName`
-            export VERSION_CODE=`./gradlew -q printVersionCode`
-            export APPLICATION_ID=`./gradlew -q printApplicationId`
+            # here we use " | tail -n1" to get last line only because app center's grade outputs some more unnecessary information for unknown reason
+            export APP_VERSION=`./gradlew -q printVersionName | tail -n1`
+            export VERSION_CODE=`./gradlew -q printVersionCode | tail -n1`
+            export APPLICATION_ID=`./gradlew -q printApplicationId | tail -n1`
             echo "Found app version $APP_VERSION"
             echo "Found version code $VERSION_CODE"
             echo "Found application id $APPLICATION_ID"
