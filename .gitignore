@@ -7,3 +7,6 @@ ios-release.bundle
 ios-release.bundle.map
 ios-debug.bundle
 ios-debug.bundle.map
+android/.gradle
+android/app/build
+android/build
