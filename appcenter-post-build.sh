@@ -18,12 +18,12 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
             # Here we don't support finding marketing version older than xcode 11.
             # If there's no marketing version, you can simply use xcode 11 to update target to automatically have it.
             cd $APPCENTER_SOURCE_DIRECTORY/ios
-            export MARKETING_VERSION=`/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme $APPCENTER_XCODE_SCHEME -showBuildSettings | grep "MARKETING_VERSION" | sed 's/[ ]*MARKETING_VERSION = //'`
-            if [ -z "$MARKETING_VERSION" ]; then
-                echo "Failed to find marketing version, exit 1"
+            export APP_VERSION=`/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme $APPCENTER_XCODE_SCHEME -showBuildSettings | grep "MARKETING_VERSION" | sed 's/[ ]*MARKETING_VERSION = //'`
+            if [ -z "$APP_VERSION" ]; then
+                echo "Failed to find app version, exit 1"
                 exit 1
             fi
-                echo "Found marketing version $MARKETING_VERSION"
+            echo "Found app version $APP_VERSION"
             
             echo "Generating Source Map"
             cd $APPCENTER_SOURCE_DIRECTORY
@@ -31,7 +31,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
             echo "Uploading Source Map"
             curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
                 -F apiKey=$BUGSNAG_API_KEY \
-                -F appVersion=$MARKETING_VERSION \
+                -F appVersion=$APP_VERSION \
                 -F dev=false \
                 -F platform=ios \
                 -F sourceMap=@ios-release.bundle.map \
@@ -52,13 +52,21 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
         elif [ -n "$APPCENTER_ANDROID_VARIANT" ]; then
             echo "This is Android project"
             
+            cd $APPCENTER_SOURCE_DIRECTORY/android
+            export APP_VERSION=`./gradlew -q printVersionName`
+            if [ -z "$APP_VERSION" ]; then
+                echo "Failed to find app version, exit 1"
+                exit 1
+            fi
+            echo "Found app version $APP_VERSION"
+
             echo "Generating Source Maps"
-            #yarn run
-            react-native bundle --platform android --dev false --entry-file index.js --bundle-output android-release.bundle --sourcemap-output android-release.bundle.map
+            cd $APPCENTER_SOURCE_DIRECTORY
+            yarn run react-native bundle --platform android --dev false --entry-file index.js --bundle-output android-release.bundle --sourcemap-output android-release.bundle.map
             echo "Uploading Source Map"
             curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
                 -F apiKey=$BUGSNAG_API_KEY \
-                -F appVersion=1.0 \
+                -F appVersion=$APP_VERSION \
                 -F dev=false \
                 -F platform=android \
                 -F sourceMap=@android-release.bundle.map \
@@ -66,7 +74,8 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
                 -F projectRoot=`pwd`
             echo "Done Source Map"
 
-            echo "TODO: upload mapping file"
+            echo "Upload mapping file"
+            #TODO
 
         else
             echo "This is not either iOS or Android project"
