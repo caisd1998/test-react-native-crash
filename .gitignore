@@ -10,3 +10,7 @@ ios-debug.bundle.map
 android/.gradle
 android/app/build
 android/build
+android/.idea
+MyApp.iml
+app.iml
+local.properties
