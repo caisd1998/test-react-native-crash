@@ -18,4 +18,12 @@ RCT_EXPORT_METHOD(tryCrash) {
   @throw [[NSException alloc] initWithName:name reason:message userInfo:nil];
 }
 
+RCT_REMAP_METHOD(findEvents,
+                 findEventsWithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSError *error = [NSError errorWithDomain:@"MyApp Custom" code:11 userInfo:nil];
+  reject(@"no_events", @"There were no events", error);
+}
+
 @end

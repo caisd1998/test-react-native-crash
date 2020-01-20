@@ -47,6 +47,14 @@ export default class MyApp extends Component {
           }}
           title="Handled Rejection in Promise"
         />
+        <Button
+          onPress={()=> {
+            Alert.alert("Notified");
+            NativeCrash.findEvents()
+              .then(r => console.log(`.then(${r})`));
+          }}
+          title="Unhandled Rejection in Native Module"
+        />
       </View>
     );
   }
