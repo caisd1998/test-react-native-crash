@@ -54,6 +54,7 @@ export default class MyApp extends Component {
               .then(r => console.log(`.then(${r})`));
           }}
           title="Unhandled Rejection in Native Module"
+          // note: this way we can't see js stack trace, tech limit
         />
       </View>
     );
