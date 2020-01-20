@@ -84,7 +84,8 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
                 -F apiKey=$BUGSNAG_API_KEY \
                 -F versionCode=$VERSION_CODE \
                 -F appId=$APPLICATION_ID \
-                -F versionName=$APP_VERSION
+                -F versionName=$APP_VERSION \
+                -F overwrite=true
             echo "Done mapping file"
 
         else
